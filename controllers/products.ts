@@ -79,4 +79,4 @@ const deleteProduct = ({ response }: { response: any }) => {
   };
 };
 
-export { getProducts };
+export { getProducts, getProduct, createProduct, updateProduct, deleteProduct };
