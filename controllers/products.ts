@@ -39,8 +39,40 @@ let products: Product[] = [
   },
 ];
 
-// GET all products - route GET /api/products
+// @GET /api/products - all products
 const getProducts = ({ response }: { response: any }) => {
+  response.body = {
+    success: true,
+    data: products,
+  };
+};
+
+// @GET /api/products/:id - retrieve
+const getProduct = ({ response }: { response: any }) => {
+  response.body = {
+    success: true,
+    data: products,
+  };
+};
+
+// @POST /api/products/:id
+const createProduct = ({ response }: { response: any }) => {
+  response.body = {
+    success: true,
+    data: products,
+  };
+};
+
+// @PUT /api/products/:id
+const updateProduct = ({ response }: { response: any }) => {
+  response.body = {
+    success: true,
+    data: products,
+  };
+};
+
+// @DELETE /api/products/:id
+const deleteProduct = ({ response }: { response: any }) => {
   response.body = {
     success: true,
     data: products,
