@@ -1,8 +1,15 @@
-import { Product } from "../types.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
-import { Product } from "../types";
 
-let products: Product[] = [
+type ProductType = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  size: string;
+  image: string | undefined;
+};
+
+let products: ProductType[] = [
   {
     id: "1",
     name: "Cárdigan guinda tejido",
@@ -57,7 +64,7 @@ const getProducts = ({ response }: { response: any }) => {
 const getProduct = (
   { params, response }: { params: { id: string }; response: any },
 ) => {
-  const newProduct: Product | undefined = products.find((product) =>
+  const newProduct: ProductType | undefined = products.find((product) =>
     product.id === params.id
   );
 
@@ -89,7 +96,7 @@ const createProduct = async (
       message: "No data send to server",
     };
   } else {
-    const product: Product = body.value;
+    const product: ProductType = body.value;
     product.id = v4.generate();
     products.push(product);
     response.status = 201;
@@ -108,7 +115,9 @@ const updateProduct = async (
     response: any;
   },
 ) => {
-  const product: Product | undefined = products.find((p) => p.id === params.id);
+  const product: ProductType | undefined = products.find((p) =>
+    p.id === params.id
+  );
 
   if (product) {
     const body = await request.body();
