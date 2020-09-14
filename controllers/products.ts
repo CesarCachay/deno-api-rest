@@ -1,5 +1,6 @@
 import { Product } from "../types.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
+import { Product } from "../types";
 
 let products: Product[] = [
   {
@@ -100,11 +101,42 @@ const createProduct = async (
 };
 
 // @PUT /api/products/:id
-const updateProduct = ({ response }: { response: any }) => {
-  response.body = {
-    success: true,
-    data: products,
-  };
+const updateProduct = async (
+  { params, request, response }: {
+    params: { id: string };
+    request: any;
+    response: any;
+  },
+) => {
+  const product: Product | undefined = products.find((p) => p.id === params.id);
+
+  if (product) {
+    const body = await request.body();
+
+    const updatedData: {
+      name?: string;
+      description?: string;
+      price?: number;
+      size?: string;
+      image?: string;
+    } = body.value;
+
+    products = products.map((p) =>
+      p.id === params.id ? { ...p, ...updatedData } : p
+    );
+
+    response.status = 200;
+    response.body = {
+      success: true,
+      data: products,
+    };
+  } else {
+    response.status = 404;
+    response.body = {
+      success: false,
+      message: "No product found with that id",
+    };
+  }
 };
 
 // @DELETE /api/products/:id
