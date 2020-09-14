@@ -6,40 +6,49 @@ type ProductType = {
   description: string;
   price: number;
   size: string;
+  image: string | undefined;
 };
 
 let products: ProductType[] = [
   {
-    id: "1",
+    id: v4.generate(),
     name: "Cárdigan guinda tejido",
     description:
       "Prenda tejida con flecos en la parte final que le añaden largo y movimiento.",
     price: 42,
     size: "M",
+    image:
+      "https://res.cloudinary.com/rql-products/image/upload/v1600040927/cardigan-guinda-tejido_avkk9z.png",
   },
   {
-    id: "2",
+    id: v4.generate(),
     name: "Camisa franela cuadros",
     description:
       "Cuenta con bolsillo lateral en el pecho, detalle de franjas blancas en la mangas (largas) y número 87 parte posterior.",
     price: 42,
     size: "M",
+    image:
+      "https://res.cloudinary.com/rql-products/image/upload/v1600040959/camisa-franela-cuadros_d60i0f.png",
   },
   {
-    id: "3",
+    id: v4.generate(),
     name: "Sudadera adidas climalite",
     description:
       "Prenda larga azul noche. Cuenta con logo en el pecho y franjas blancas en las mangas. (100% poliéster)",
     price: 50,
     size: "L",
+    image:
+      "https://res.cloudinary.com/rql-products/image/upload/v1600040971/sudadera-adidas-climalite_jfxxy3.png",
   },
   {
-    id: "4",
+    id: v4.generate(),
     name: "Casaca jean oversize",
     description:
       "Forro de peluche blanco y forro de franela estampada en las mangas. Cuenta con bolsillo interno al lado izquierdo, dos bolsillos laterales y dos en la parte del pecho.",
     price: 85,
     size: "M",
+    image:
+      "https://res.cloudinary.com/rql-products/image/upload/v1600040980/casaca-jean-oversize_ya0vbk.png",
   },
 ];
 
@@ -87,23 +96,13 @@ const createProduct = async (
       message: "No Data Provided",
     };
   } else {
-    // const newProduct: ProductType = {
-    //   id: v4.generate(),
-    //   name: body.value.name,
-    //   description: body.value.description,
-    //   price: body.value.price,
-    //   size: body.value.size,
-    //   image: body.value.image,
-    // };
-    // let data = [...products, newProduct];
-
-    const product: ProductType = body.value;
-    product.id = v4.generate();
-    products.push(product);
-    response.status = 201;
+    const newProduct: ProductType = await body.value;
+    newProduct.id = v4.generate();
+    products.push(newProduct);
+    response.status = 200;
     response.body = {
       success: true,
-      data: product,
+      data: newProduct,
     };
   }
 };
@@ -129,7 +128,7 @@ const updateProduct = async (
       price?: number;
       size?: string;
       image?: string;
-    } = body.value;
+    } = await body.value;
 
     products = products.map((p) =>
       p.id === params.id ? { ...p, ...updatedData } : p
