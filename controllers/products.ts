@@ -6,7 +6,6 @@ type ProductType = {
   description: string;
   price: number;
   size: string;
-  image: string | undefined;
 };
 
 let products: ProductType[] = [
@@ -17,8 +16,6 @@ let products: ProductType[] = [
       "Prenda tejida con flecos en la parte final que le añaden largo y movimiento.",
     price: 42,
     size: "M",
-    image:
-      "https://res.cloudinary.com/rql-products/image/upload/v1600040927/cardigan-guinda-tejido_avkk9z.png",
   },
   {
     id: "2",
@@ -27,8 +24,6 @@ let products: ProductType[] = [
       "Cuenta con bolsillo lateral en el pecho, detalle de franjas blancas en la mangas (largas) y número 87 parte posterior.",
     price: 42,
     size: "M",
-    image:
-      "https://res.cloudinary.com/rql-products/image/upload/v1600040959/camisa-franela-cuadros_d60i0f.png",
   },
   {
     id: "3",
@@ -37,8 +32,6 @@ let products: ProductType[] = [
       "Prenda larga azul noche. Cuenta con logo en el pecho y franjas blancas en las mangas. (100% poliéster)",
     price: 50,
     size: "L",
-    image:
-      "https://res.cloudinary.com/rql-products/image/upload/v1600040971/sudadera-adidas-climalite_jfxxy3.png",
   },
   {
     id: "4",
@@ -47,8 +40,6 @@ let products: ProductType[] = [
       "Forro de peluche blanco y forro de franela estampada en las mangas. Cuenta con bolsillo interno al lado izquierdo, dos bolsillos laterales y dos en la parte del pecho.",
     price: 85,
     size: "M",
-    image:
-      "https://res.cloudinary.com/rql-products/image/upload/v1600040980/casaca-jean-oversize_ya0vbk.png",
   },
 ];
 
@@ -64,21 +55,21 @@ const getProducts = ({ response }: { response: any }) => {
 const getProduct = (
   { params, response }: { params: { id: string }; response: any },
 ) => {
-  const newProduct: ProductType | undefined = products.find((product) =>
+  const selectedProduct: ProductType | undefined = products.find((product) =>
     product.id === params.id
   );
 
-  if (newProduct) {
+  if (selectedProduct) {
     response.status = 200;
     response.body = {
       success: true,
-      data: newProduct,
+      data: selectedProduct,
     };
   } else {
     response.status = 404;
     response.body = {
       success: false,
-      message: "No product available with that id",
+      message: "Product Not Found",
     };
   }
 };
@@ -93,9 +84,19 @@ const createProduct = async (
     response.status = 400;
     response.body = {
       success: false,
-      message: "No data send to server",
+      message: "No Data Provided",
     };
   } else {
+    // const newProduct: ProductType = {
+    //   id: v4.generate(),
+    //   name: body.value.name,
+    //   description: body.value.description,
+    //   price: body.value.price,
+    //   size: body.value.size,
+    //   image: body.value.image,
+    // };
+    // let data = [...products, newProduct];
+
     const product: ProductType = body.value;
     product.id = v4.generate();
     products.push(product);
@@ -115,11 +116,11 @@ const updateProduct = async (
     response: any;
   },
 ) => {
-  const product: ProductType | undefined = products.find((p) =>
+  const productFound: ProductType | undefined = products.find((p) =>
     p.id === params.id
   );
 
-  if (product) {
+  if (productFound) {
     const body = await request.body();
 
     const updatedData: {
@@ -137,13 +138,13 @@ const updateProduct = async (
     response.status = 200;
     response.body = {
       success: true,
-      data: products,
+      data: `Product id ${params.id} has been updated`,
     };
   } else {
     response.status = 404;
     response.body = {
       success: false,
-      message: "No product found with that id",
+      message: "Product Not Found",
     };
   }
 };
