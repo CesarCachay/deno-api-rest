@@ -1,13 +1,5 @@
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
-
-type ProductType = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  size: string;
-  image: string | undefined;
-};
+import { ProductType } from "./types.ts";
 
 let products: ProductType[] = [
   {
@@ -149,10 +141,14 @@ const updateProduct = async (
 };
 
 // @DELETE /api/products/:id
-const deleteProduct = ({ response }: { response: any }) => {
+const deleteProduct = (
+  { params, response }: { params: { id: string }; response: any },
+) => {
+  products = products.filter((p) => p.id !== params.id);
+
   response.body = {
     success: true,
-    data: products,
+    data: "Product remove",
   };
 };
 
